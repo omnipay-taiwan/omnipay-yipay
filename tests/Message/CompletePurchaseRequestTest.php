@@ -58,16 +58,12 @@ class CompletePurchaseRequestTest extends TestCase
         ]);
 
         $request = new CompletePurchaseRequest($this->getHttpClient(), $httpRequest);
-        $request->initialize(array_merge([
+        $request->initialize([
             'merchantId' => '1604000006',
             'key' => 'zBaw7bzzD8K1THSGoIbev08xEJp5yzyeuv1MWJDR2L0',
             'iv' => 'YeQInQjfelvkBcWuyhWDAw==',
             'testMode' => true,
-        ], [
-            'returnURL' => 'https://gateway-test.yipay.com.tw/demo/notify',
-            'cancelURL' => 'https://gateway-test.yipay.com.tw/demo/cancel',
-            'backgroundURL' => 'https://gateway-test.yipay.com.tw/demo/payment-info',
-        ]));
+        ]);
         $request->setNotifyUrl('https://gateway-test.yipay.com.tw/demo/notify');
         $request->setCancelUrl('https://gateway-test.yipay.com.tw/demo/cancel');
         $request->setPaymentInfoUrl('https://gateway-test.yipay.com.tw/demo/payment-info');

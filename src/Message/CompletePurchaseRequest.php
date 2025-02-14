@@ -9,19 +9,15 @@ class CompletePurchaseRequest extends PurchaseRequest
 {
     use HasYiPAY;
 
+    /**
+     * @throws InvalidResponseException
+     */
     public function getData()
     {
         $data = $this->httpRequest->request->all();
         $data['merchantId'] = $this->getMerchantId();
+        $data = array_merge($data, $this->getUrls($data));
 
-        return array_merge($data, $this->getUrls($data));
-    }
-
-    /**
-     * @throws InvalidResponseException
-     */
-    public function sendData($data)
-    {
         $type = (int) $data['type'];
         if ($type === 3) {
             $checkCode = $this->checkCode([
@@ -53,6 +49,11 @@ class CompletePurchaseRequest extends PurchaseRequest
             throw new InvalidResponseException('Invalid check code');
         }
 
+        return $data;
+    }
+
+    public function sendData($data)
+    {
         return $this->response = new CompletePurchaseResponse($this, $data);
     }
 }

@@ -64,4 +64,26 @@ class GatewayTest extends GatewayTestCase
         self::assertEquals('YP2016111503353', $response->getTransactionId());
         self::assertEquals('C0216111500000000001', $response->getTransactionReference());
     }
+
+    public function testGetPaymentInfo()
+    {
+        $this->getHttpRequest()->request->replace([
+            'merchantId' => '1604000006',
+            'type' => '3',
+            'amount' => '1500',
+            'orderNo' => 'YP2016111503353',
+            'transactionNo' => 'C0216111500000000001',
+            'statusCode' => '00',
+            'pinCode' => '1550D0332H2902',
+            'checkCode' => 'eef416eec27026d62d0aa519bda9f91e142c8a6d',
+        ]);
+        $response = $this->gateway->getPaymentInfo([
+            'notifyUrl' => 'https://gateway-test.yipay.com.tw/demo/notify',
+            'cancelUrl' => 'https://gateway-test.yipay.com.tw/demo/cancel',
+            'paymentInfoUrl' => 'https://gateway-test.yipay.com.tw/demo/payment-info',
+        ])->send();
+
+        self::assertTrue($response->isSuccessful());
+        self::assertEquals('OK', $response->getReply());
+    }
 }
