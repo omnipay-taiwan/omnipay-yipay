@@ -30,7 +30,7 @@ class GatewayTest extends GatewayTestCase
             'transaction_id' => 'YP2016111503353',
             'returnUrl' => 'https://gateway-test.yipay.com.tw/demo/return',
             'cancelUrl' => 'https://gateway-test.yipay.com.tw/demo/cancel',
-            'notifyUrl' => 'https://gateway-test.yipay.com.tw/demo/background',
+            'notifyUrl' => 'https://gateway-test.yipay.com.tw/demo/notify',
         ])->send();
 
         self::assertFalse($response->isSuccessful());
@@ -40,23 +40,7 @@ class GatewayTest extends GatewayTestCase
 
     public function testCompletePurchase()
     {
-        // 1 merchantId 商家編號 Int
-        // 2 type 付款方式 Int 參閱《附錄 C. 付款方式》
-        // 3 amount 交易金額 Int
-        // 4 orderNo 商家訂單編號 String 商家傳送至乙禾的自訂訂單編號
-        // 5 transactionNo 交易編號 String 乙禾系統的交易編號
-        // 6 statusCode 交易回覆代碼 String 00 代表成功，其餘皆為失敗
-        // 7 statusMessage 交易回覆訊息 String 授權代碼說明
-        // 8 approvalCode 授權碼 String
-        // 9 last4CardNumber 卡號末四碼 Int 信用卡號末四碼
-        // 10 checkCode 檢查碼 String 參閱下方檢查碼組成參數
-        // 序號 名稱 描述 範例
-        // 1 merchantId 商家編號 1604000006
-        // 2 amount 交易金額 1500
-        // 3 orderNo 商家訂單編號 YP2016111503353
-        // 8 乙禾網絡有限公司
-
-        $this->getHttpRequest()->request->add([
+        $this->getHttpRequest()->request->replace([
             'merchantId' => '1604000006',
             'type' => '2',
             'amount' => '1500',
@@ -68,8 +52,8 @@ class GatewayTest extends GatewayTestCase
             'last4CardNumber' => '2222',
             'returnURL' => 'https://gateway-test.yipay.com.tw/demo/return',
             'cancelURL' => 'https://gateway-test.yipay.com.tw/demo/cancel',
-            'backgroundURL' => 'https://gateway-test.yipay.com.tw/demo/background',
-            'checkCode' => '5a39b9c01f1f6dec16c692034081759b4d37c9aa',
+            'backgroundURL' => 'https://gateway-test.yipay.com.tw/demo/notify',
+            'checkCode' => 'd1bae877675e505b806a7fbd6f9f5105e495640b',
         ]);
 
         $response = $this->gateway->completePurchase()->send();

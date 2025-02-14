@@ -16,7 +16,7 @@ class CompletePurchaseResponse extends AbstractResponse
 
     public function getMessage()
     {
-        return $this->data['statusMessage'];
+        return $this->data['statusMessage'] ?? null;
     }
 
     public function getTransactionId()

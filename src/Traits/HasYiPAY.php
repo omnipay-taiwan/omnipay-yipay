@@ -46,6 +46,36 @@ trait HasYiPAY
         return $this->getParameter('iv');
     }
 
+    /**
+     * 取得背景回傳網址
+     *
+     * @return string|null 背景回傳網址
+     */
+    public function getBackgroundURL()
+    {
+        return $this->getNotifyUrl();
+    }
+
+    /**
+     * 設定背景回傳網址
+     *
+     * @param  string  $value  交易完成後 YiPay 以背景方式 POST 回傳結果的網址
+     */
+    public function setBackgroundURL($value)
+    {
+        return $this->setNotifyUrl($value);
+    }
+
+    public function setPaymentInfoUrl($value)
+    {
+        $this->setParameter('paymentInfoUrl', $value);
+    }
+
+    public function getPaymentInfoUrl()
+    {
+        return $this->getParameter('paymentInfoUrl');
+    }
+
     public function checkCode($keys, $data)
     {
         $signed = [];
@@ -54,5 +84,24 @@ trait HasYiPAY
         }
 
         return (new Hasher($this->getKey(), $this->getIv()))->make($signed);
+    }
+
+    protected function getUrls($data)
+    {
+        $type = (int) $data['type'];
+
+        if ($type === 3) {
+            return [
+                'returnURL' => $this->getNotifyUrl(),
+                'cancelURL' => $this->getCancelUrl(),
+                'backgroundURL' => $this->getPaymentInfoUrl(),
+            ];
+        }
+
+        return [
+            'returnURL' => $this->getReturnUrl(),
+            'cancelURL' => $this->getCancelUrl(),
+            'backgroundURL' => $this->getNotifyUrl(),
+        ];
     }
 }
