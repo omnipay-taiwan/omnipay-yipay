@@ -2,7 +2,6 @@
 
 namespace Omnipay\YiPAY\Message;
 
-use Omnipay\YiPAY\Hasher;
 use Omnipay\YiPAY\Traits\HasYiPAY;
 
 class PurchaseRequest extends AbstractRequest
@@ -239,15 +238,9 @@ class PurchaseRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        $hasher = new Hasher($this->getKey(), $this->getIv());
-        $data['checkCode'] = $hasher->make([
-            'merchantId' => $data['merchantId'],
-            'amount' => $data['amount'],
-            'orderNo' => $data['orderNo'],
-            'returnURL' => $data['returnURL'],
-            'cancelURL' => $data['cancelURL'],
-            'backgroundURL' => $data['backgroundURL'],
-        ]);
+        $data['checkCode'] = $this->checkCode([
+            'merchantId', 'amount', 'orderNo', 'returnURL', 'cancelURL', 'backgroundURL',
+        ], $data);
 
         return $this->response = new PurchaseResponse($this, $data);
     }

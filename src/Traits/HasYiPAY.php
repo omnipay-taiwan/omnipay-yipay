@@ -2,6 +2,8 @@
 
 namespace Omnipay\YiPAY\Traits;
 
+use Omnipay\YiPAY\Hasher;
+
 trait HasYiPAY
 {
     /**
@@ -44,4 +46,13 @@ trait HasYiPAY
         return $this->getParameter('iv');
     }
 
+    public function checkCode($keys, $data)
+    {
+        $signed = [];
+        foreach ($keys as $key) {
+            $signed[$key] = $data[$key];
+        }
+
+        return (new Hasher($this->getKey(), $this->getIv()))->make($signed);
+    }
 }
