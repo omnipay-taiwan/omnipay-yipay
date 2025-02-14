@@ -15,6 +15,8 @@ class GatewayTest extends GatewayTestCase
     {
         parent::setUp();
 
+        // $httpClient = new \Omnipay\Common\Http\Client(new Client());
+        // $this->gateway = new Gateway($httpClient, $this->getHttpRequest());
         $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->initialize([
             'merchantId' => '1604000006',
@@ -91,6 +93,23 @@ class GatewayTest extends GatewayTestCase
         self::assertEquals('YP2016111503353', $request->getTransactionId());
         self::assertEquals('C0216111500000000001', $request->getTransactionReference());
         self::assertEquals('OK', $request->getReply());
+    }
+
+    public function testFetchTransaction()
+    {
+        $this->setMockHttpResponse('FetchTransactionSuccess.txt');
+
+        $response = $this->gateway->fetchTransaction([
+            'type' => '2',
+            'amount' => '1500',
+            'orderNo' => 'YP2016111503353',
+        ])->send();
+
+        self::assertTrue($response->isSuccessful());
+        self::assertEquals('00', $response->getCode());
+        self::assertEquals('成功', $response->getMessage());
+        self::assertEquals('YP2016111503353', $response->getTransactionId());
+        self::assertEquals('C0216111500000000001', $response->getTransactionReference());
     }
 
     public function testGetPaymentInfo()

@@ -9,9 +9,9 @@ use Omnipay\Common\Message\AbstractRequest as BaseAbstractRequest;
  */
 abstract class AbstractRequest extends BaseAbstractRequest
 {
-    protected $liveEndpoint = 'https://gateway.yipay.com.tw/payment';
+    protected $liveEndpoint = 'https://gateway.yipay.com.tw';
 
-    protected $testEndpoint = 'https://gateway-test.yipay.com.tw/payment';
+    protected $testEndpoint = 'https://gateway-test.yipay.com.tw';
 
     public function getEndpoint()
     {

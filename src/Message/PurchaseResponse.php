@@ -18,7 +18,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
 
     public function getRedirectUrl()
     {
-        return $this->request->getEndpoint();
+        return $this->request->getEndpoint().'/payment';
     }
 
     public function getRedirectMethod()
