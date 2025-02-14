@@ -10,28 +10,31 @@ class GatewayTest extends GatewayTestCase
     /** @var Gateway */
     protected $gateway;
 
-    private $options = [];
-
     public function setUp(): void
     {
         parent::setUp();
 
         $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
-
-        $this->options = [
-            'amount' => '10.00',
-            'card' => $this->getValidCard(),
-        ];
+        $this->gateway->initialize([
+            'merchantId' => '1604000006',
+            'key' => 'zBaw7bzzD8K1THSGoIbev08xEJp5yzyeuv1MWJDR2L0',
+            'iv' => 'YeQInQjfelvkBcWuyhWDAw==',
+            'testMode' => true,
+        ]);
     }
 
-    public function testAuthorize()
+    public function testPurchase()
     {
-        $this->setMockHttpResponse('AuthorizeSuccess.txt');
+        $response = $this->gateway->purchase([
+            'amount' => '1500',
+            'transaction_id' => 'YP2016111503353',
+            'returnUrl' => 'https://gateway-test.yipay.com.tw/demo/return',
+            'cancelUrl' => 'https://gateway-test.yipay.com.tw/demo/cancel',
+            'notifyUrl' => 'https://gateway-test.yipay.com.tw/demo/background',
+        ])->send();
 
-        $response = $this->gateway->authorize($this->options)->send();
-
-        $this->assertTrue($response->isSuccessful());
-        $this->assertEquals('1234', $response->getTransactionReference());
-        $this->assertNull($response->getMessage());
+        self::assertFalse($response->isSuccessful());
+        self::assertTrue($response->isRedirect());
+        self::assertEquals('POST', $response->getRedirectMethod());
     }
 }

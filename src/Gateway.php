@@ -4,12 +4,16 @@ namespace Omnipay\YiPAY;
 
 use Omnipay\Common\AbstractGateway;
 use Omnipay\YiPAY\Message\AuthorizeRequest;
+use Omnipay\YiPAY\Message\PurchaseRequest;
+use Omnipay\YiPAY\Traits\HasYiPAY;
 
 /**
  * YiPAY Gateway
  */
 class Gateway extends AbstractGateway
 {
+    use HasYiPAY;
+
     public function getName()
     {
         return 'YiPAY';
@@ -18,26 +22,15 @@ class Gateway extends AbstractGateway
     public function getDefaultParameters()
     {
         return [
+            'merchantId' => '',
             'key' => '',
+            'iv' => '',
             'testMode' => false,
         ];
     }
 
-    public function getKey()
+    public function purchase(array $options = [])
     {
-        return $this->getParameter('key');
-    }
-
-    public function setKey($value)
-    {
-        return $this->setParameter('key', $value);
-    }
-
-    /**
-     * @return Message\AuthorizeRequest
-     */
-    public function authorize(array $options = [])
-    {
-        return $this->createRequest(AuthorizeRequest::class, $options);
+        return $this->createRequest(PurchaseRequest::class, $options);
     }
 }
