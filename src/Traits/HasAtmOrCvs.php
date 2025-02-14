@@ -1,8 +1,8 @@
 <?php
 
-namespace Omnipay\YiPAY\Traits;
+namespace Omnipay\YiPay\Traits;
 
-trait HasCVS
+trait HasAtmOrCvs
 {
     /**
      * 設定繳款截止日期

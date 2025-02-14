@@ -1,10 +1,10 @@
 <?php
 
-namespace Omnipay\YiPAY\Traits;
+namespace Omnipay\YiPay\Traits;
 
-use Omnipay\YiPAY\Hasher;
+use Omnipay\YiPay\Hasher;
 
-trait HasYiPAY
+trait HasYiPay
 {
     /**
      * 取得商家編號
@@ -36,14 +36,14 @@ trait HasYiPAY
         return $this->setParameter('key', $value);
     }
 
-    public function setIv($value)
-    {
-        return $this->setParameter('iv', $value);
-    }
-
     public function getIv()
     {
         return $this->getParameter('iv');
+    }
+
+    public function setIv($value)
+    {
+        return $this->setParameter('iv', $value);
     }
 
     /**
@@ -90,7 +90,7 @@ trait HasYiPAY
     {
         $type = (int) $data['type'];
 
-        if ($type === 3) {
+        if (in_array($type, [3, 4], true) && ! empty($this->getPaymentInfoUrl())) {
             return [
                 'returnURL' => $this->getNotifyUrl(),
                 'cancelURL' => $this->getCancelUrl(),

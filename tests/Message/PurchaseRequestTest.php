@@ -1,9 +1,9 @@
 <?php
 
-namespace Omnipay\YiPAY\Tests\Message;
+namespace Omnipay\YiPay\Tests\Message;
 
 use Omnipay\Tests\TestCase;
-use Omnipay\YiPAY\Message\PurchaseRequest;
+use Omnipay\YiPay\Message\PurchaseRequest;
 
 class PurchaseRequestTest extends TestCase
 {
@@ -71,9 +71,6 @@ class PurchaseRequestTest extends TestCase
             'orderNote2' => 'Order Note 2',
             'expirationDay' => '2',
             'notificationEmail' => 'foo@bar.com',
-            // 'returnURL' => 'https://gateway-test.yipay.com.tw/demo/return',
-            'cancelURL' => 'https://gateway-test.yipay.com.tw/demo/cancel',
-            // 'backgroundURL' => 'https://gateway-test.yipay.com.tw/demo/background',
             'timeout' => 28800,
             'validTime' => '202001011330',
             'timeoutURL' => 'https://gateway-test.yipay.com.tw/demo/timeout',
@@ -115,5 +112,41 @@ class PurchaseRequestTest extends TestCase
         self::assertEquals('POST', $response->getRedirectMethod());
         self::assertEquals('https://gateway-test.yipay.com.tw/payment', $response->getRedirectUrl());
         self::assertNotEmpty($redirectData['checkCode']);
+    }
+
+    public function testGetATMData()
+    {
+        $options = [
+            'type' => '4',
+            'amount' => '1500',
+            'orderNo' => 'YP2016111503353',
+            'orderDescription' => 'Order Description',
+            'orderNote1' => 'Order Note 1',
+            'orderNote2' => 'Order Note 2',
+            'expirationDay' => '2',
+            'notificationEmail' => 'foo@bar.com',
+            'timeout' => 28800,
+            'validTime' => '202001011330',
+            'timeoutURL' => 'https://gateway-test.yipay.com.tw/demo/timeout',
+        ];
+        $request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
+        $request->initialize(array_merge([
+            'merchantId' => '1604000006',
+            'key' => 'zBaw7bzzD8K1THSGoIbev08xEJp5yzyeuv1MWJDR2L0',
+            'iv' => 'YeQInQjfelvkBcWuyhWDAw==',
+            'testMode' => true,
+        ], $options));
+        $request->setNotifyUrl('https://gateway-test.yipay.com.tw/demo/notify');
+        $request->setCancelUrl('https://gateway-test.yipay.com.tw/demo/cancel');
+        $request->setPaymentInfoUrl('https://gateway-test.yipay.com.tw/demo/payment-info');
+
+        self::assertEquals(array_merge($options, [
+            'merchantId' => '1604000006',
+            'returnURL' => 'https://gateway-test.yipay.com.tw/demo/notify',
+            'cancelURL' => 'https://gateway-test.yipay.com.tw/demo/cancel',
+            'backgroundURL' => 'https://gateway-test.yipay.com.tw/demo/payment-info',
+        ]), $request->getData());
+
+        return [$request->send(), $options];
     }
 }

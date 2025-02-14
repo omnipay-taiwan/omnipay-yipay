@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\YiPAY\Message;
+namespace Omnipay\YiPay\Message;
 
 class CompletePurchaseResponse extends AbstractResponse
 {
@@ -11,7 +11,7 @@ class CompletePurchaseResponse extends AbstractResponse
 
     public function getCode()
     {
-        return $this->data['statusCode'];
+        return $this->data['statusCode'] ?? null;
     }
 
     public function getMessage()
@@ -26,6 +26,6 @@ class CompletePurchaseResponse extends AbstractResponse
 
     public function getTransactionReference()
     {
-        return $this->data['transactionNo'];
+        return $this->data['transactionNo'] ?? null;
     }
 }

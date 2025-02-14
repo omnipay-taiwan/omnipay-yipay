@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\YiPAY;
+namespace Omnipay\YiPay;
 
 use phpseclib3\Crypt\AES;
 

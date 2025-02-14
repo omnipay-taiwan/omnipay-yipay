@@ -1,9 +1,10 @@
 <?php
 
-namespace Omnipay\YiPAY\Tests;
+namespace Omnipay\YiPay\Tests;
 
+use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Tests\GatewayTestCase;
-use Omnipay\YiPAY\Gateway;
+use Omnipay\YiPay\Gateway;
 
 class GatewayTest extends GatewayTestCase
 {
@@ -50,19 +51,46 @@ class GatewayTest extends GatewayTestCase
             'statusMessage' => '成功',
             'approvalCode' => '629540',
             'last4CardNumber' => '2222',
+            'checkCode' => '4894f133d4a7f0dc0a5d41c77b0157fe4023dbdd',
+        ]);
+
+        $response = $this->gateway->completePurchase([
             'returnURL' => 'https://gateway-test.yipay.com.tw/demo/return',
             'cancelURL' => 'https://gateway-test.yipay.com.tw/demo/cancel',
             'backgroundURL' => 'https://gateway-test.yipay.com.tw/demo/notify',
-            'checkCode' => 'd1bae877675e505b806a7fbd6f9f5105e495640b',
-        ]);
-
-        $response = $this->gateway->completePurchase()->send();
+        ])->send();
 
         self::assertTrue($response->isSuccessful());
         self::assertEquals('00', $response->getCode());
         self::assertEquals('成功', $response->getMessage());
         self::assertEquals('YP2016111503353', $response->getTransactionId());
         self::assertEquals('C0216111500000000001', $response->getTransactionReference());
+    }
+
+
+    public function testAcceptNotification()
+    {
+        $this->getHttpRequest()->request->replace([
+            'merchantId' => '1604000006',
+            'type' => '4',
+            'amount' => '1500',
+            'orderNo' => 'YP2016111503353',
+            'transactionNo' => 'C0216111500000000001',
+            'statusCode' => '00',
+            'account' => '63167185726653',
+            'checkCode' => '1bfe1bd1c8289c65367fa28eeb267b83cc361f91',
+        ]);
+
+        $request = $this->gateway->acceptNotification([
+            'returnURL' => 'https://gateway-test.yipay.com.tw/demo/return',
+            'cancelURL' => 'https://gateway-test.yipay.com.tw/demo/cancel',
+            'backgroundURL' => 'https://gateway-test.yipay.com.tw/demo/notify',
+        ]);
+
+        self::assertEquals(NotificationInterface::STATUS_COMPLETED, $request->getTransactionStatus());
+        self::assertEquals('YP2016111503353', $request->getTransactionId());
+        self::assertEquals('C0216111500000000001', $request->getTransactionReference());
+        self::assertEquals('OK', $request->getReply());
     }
 
     public function testGetPaymentInfo()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\YiPAY\Message;
+namespace Omnipay\YiPay\Message;
 
 use Omnipay\Common\Message\AbstractResponse as BaseAbstractResponse;
 

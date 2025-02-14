@@ -1,23 +1,24 @@
 <?php
 
-namespace Omnipay\YiPAY;
+namespace Omnipay\YiPay;
 
 use Omnipay\Common\AbstractGateway;
-use Omnipay\YiPAY\Message\CompletePurchaseRequest;
-use Omnipay\YiPAY\Message\GetPaymentInfoRequest;
-use Omnipay\YiPAY\Message\PurchaseRequest;
-use Omnipay\YiPAY\Traits\HasYiPAY;
+use Omnipay\YiPay\Message\AcceptNotificationRequest;
+use Omnipay\YiPay\Message\CompletePurchaseRequest;
+use Omnipay\YiPay\Message\GetPaymentInfoRequest;
+use Omnipay\YiPay\Message\PurchaseRequest;
+use Omnipay\YiPay\Traits\HasYiPay;
 
 /**
- * YiPAY Gateway
+ * YiPay Gateway
  */
 class Gateway extends AbstractGateway
 {
-    use HasYiPAY;
+    use HasYiPay;
 
     public function getName()
     {
-        return 'YiPAY';
+        return 'YiPay';
     }
 
     public function getDefaultParameters()
@@ -38,6 +39,11 @@ class Gateway extends AbstractGateway
     public function completePurchase(array $options = [])
     {
         return $this->createRequest(CompletePurchaseRequest::class, $options);
+    }
+
+    public function acceptNotification(array $options = [])
+    {
+        return $this->createRequest(AcceptNotificationRequest::class, $options);
     }
 
     public function getPaymentInfo(array $options = [])

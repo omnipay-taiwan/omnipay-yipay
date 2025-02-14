@@ -1,16 +1,16 @@
 <?php
 
-namespace Omnipay\YiPAY\Message;
+namespace Omnipay\YiPay\Message;
 
-use Omnipay\YiPAY\Traits\HasCVS;
-use Omnipay\YiPAY\Traits\HasDefaults;
-use Omnipay\YiPAY\Traits\HasYiPAY;
+use Omnipay\YiPay\Traits\HasAtmOrCvs;
+use Omnipay\YiPay\Traits\HasDefaults;
+use Omnipay\YiPay\Traits\HasYiPay;
 
 class PurchaseRequest extends AbstractRequest
 {
-    use HasYiPAY;
+    use HasYiPay;
     use HasDefaults;
-    use HasCVS;
+    use HasAtmOrCvs;
 
     public function getData()
     {
@@ -26,13 +26,13 @@ class PurchaseRequest extends AbstractRequest
             'orderNote1' => $this->getOrderNote1(),
             'orderNote2' => $this->getOrderNote2(),
             'notificationEmail' => $this->getNotificationEmail(),
-            'timeout' => $this->getTimeout(),
+            'timeout' => $this->getTimeout() ?: '0',
             'validTime' => $this->getValidTime(),
             'timeoutURL' => $this->getTimeoutUrl(),
         ];
 
-        if ($type === 3) {
-            $data['expirationDay'] = $this->getExpirationDay();
+        if (in_array($type, [3, 4], true)) {
+            $data['expirationDay'] = $this->getExpirationDay() ?: '2';
         }
 
         return array_filter(array_merge($data, $this->getUrls($data)), static function ($value) {

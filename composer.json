@@ -24,12 +24,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Omnipay\\YiPAY\\": "src"
+            "Omnipay\\YiPay\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Omnipay\\YiPAY\\Tests\\": "tests"
+            "Omnipay\\YiPay\\Tests\\": "tests"
         }
     },
     "scripts": {

@@ -1,6 +1,6 @@
-# Omnipay: YiPAY
+# Omnipay: YiPay
 
-**YiPAY gateway for the Omnipay PHP payment processing library**
+**YiPay gateway for the Omnipay PHP payment processing library**
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/omnipay-taiwan/omnipay-yipay.svg?style=flat-square)](https://packagist.org/packages/omnipay-taiwan/omnipay-yipay)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)

@@ -1,8 +1,8 @@
 <?php
 
-namespace Omnipay\YiPAY\Tests;
+namespace Omnipay\YiPay\Tests;
 
-use Omnipay\YiPAY\Hasher;
+use Omnipay\YiPay\Hasher;
 use PHPUnit\Framework\TestCase;
 
 class HasherTest extends TestCase

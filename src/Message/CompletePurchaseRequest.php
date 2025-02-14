@@ -1,13 +1,13 @@
 <?php
 
-namespace Omnipay\YiPAY\Message;
+namespace Omnipay\YiPay\Message;
 
 use Omnipay\Common\Exception\InvalidResponseException;
-use Omnipay\YiPAY\Traits\HasYiPAY;
+use Omnipay\YiPay\Traits\HasYiPay;
 
 class CompletePurchaseRequest extends PurchaseRequest
 {
-    use HasYiPAY;
+    use HasYiPay;
 
     /**
      * @throws InvalidResponseException
@@ -18,36 +18,14 @@ class CompletePurchaseRequest extends PurchaseRequest
         $data['merchantId'] = $this->getMerchantId();
         $data = array_merge($data, $this->getUrls($data));
 
-        $type = (int) $data['type'];
-        if ($type === 3) {
-            $checkCode = $this->checkCode([
-                'merchantId',
-                'amount',
-                'orderNo',
-                'returnURL',
-                'cancelURL',
-                'backgroundURL',
-                'transactionNo',
-                'statusCode',
-                'pinCode',
-            ], $data);
-        } else {
-            $checkCode = $this->checkCode([
-                'merchantId',
-                'amount',
-                'orderNo',
-                'returnURL',
-                'cancelURL',
-                'backgroundURL',
-                'transactionNo',
-                'statusCode',
-                'approvalCode',
-            ], $data);
+        if (array_key_exists('transactionNo', $data)) {
+            $checkCode = $this->checkCode($this->getSignedKeys((int) $data['type']), $data);
+
+            if (! hash_equals($checkCode, $data['checkCode'])) {
+                throw new InvalidResponseException('Invalid check code');
+            }
         }
 
-        if (! hash_equals($checkCode, $data['checkCode'])) {
-            throw new InvalidResponseException('Invalid check code');
-        }
 
         return $data;
     }
@@ -55,5 +33,23 @@ class CompletePurchaseRequest extends PurchaseRequest
     public function sendData($data)
     {
         return $this->response = new CompletePurchaseResponse($this, $data);
+    }
+
+    private function getSignedKeys(int $type)
+    {
+        $keys = [
+            'merchantId',
+            'amount',
+            'orderNo',
+            'returnURL',
+            'cancelURL',
+            'backgroundURL',
+            'transactionNo',
+            'statusCode',
+        ];
+        $lookup = [3 => 'pinCode', 4 => 'account'];
+        $keys[] = array_key_exists($type, $lookup) ? $lookup[$type] : 'approvalCode';
+
+        return $keys;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\YiPAY\Message;
+namespace Omnipay\YiPay\Message;
 
 class GetPaymentInfoRequest extends CompletePurchaseRequest
 {

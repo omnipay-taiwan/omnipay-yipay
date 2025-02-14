@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\YiPAY\Traits;
+namespace Omnipay\YiPay\Traits;
 
 trait HasDefaults
 {
