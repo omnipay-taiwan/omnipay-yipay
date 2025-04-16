@@ -76,6 +76,26 @@ trait HasYiPay
         return $this->getParameter('paymentInfoUrl');
     }
 
+    protected function getUrls($data)
+    {
+        $type = (int) $data['type'];
+        $cancelUrl = $this->getCancelUrl() ?: $this->getReturnUrl();
+
+        if (in_array($type, [3, 4], true) && ! empty($this->getPaymentInfoUrl())) {
+            return [
+                'returnURL' => $this->getNotifyUrl(),
+                'cancelURL' => $cancelUrl,
+                'backgroundURL' => $this->getPaymentInfoUrl(),
+            ];
+        }
+
+        return [
+            'returnURL' => $this->getReturnUrl(),
+            'cancelURL' => $cancelUrl,
+            'backgroundURL' => $this->getNotifyUrl(),
+        ];
+    }
+
     public function checkCode($keys, $data)
     {
         $signed = [];
@@ -84,24 +104,5 @@ trait HasYiPay
         }
 
         return (new Hasher($this->getKey(), $this->getIv()))->make($signed);
-    }
-
-    protected function getUrls($data)
-    {
-        $type = (int) $data['type'];
-
-        if (in_array($type, [3, 4], true) && ! empty($this->getPaymentInfoUrl())) {
-            return [
-                'returnURL' => $this->getNotifyUrl(),
-                'cancelURL' => $this->getCancelUrl(),
-                'backgroundURL' => $this->getPaymentInfoUrl(),
-            ];
-        }
-
-        return [
-            'returnURL' => $this->getReturnUrl(),
-            'cancelURL' => $this->getCancelUrl(),
-            'backgroundURL' => $this->getNotifyUrl(),
-        ];
     }
 }

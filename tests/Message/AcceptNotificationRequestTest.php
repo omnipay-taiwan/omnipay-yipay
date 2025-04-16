@@ -42,18 +42,18 @@ class AcceptNotificationRequestTest extends TestCase
         self::assertEquals('OK', $request->getReply());
     }
 
-    public function testSendCVSData()
+    public function testSendATMData()
     {
         $httpRequest = $this->getHttpRequest();
         $httpRequest->request->replace([
             'merchantId' => '1604000006',
-            'type' => '3',
+            'type' => '4',
             'amount' => '1500',
             'orderNo' => 'YP2016111503353',
             'transactionNo' => 'C0216111500000000001',
             'statusCode' => '00',
-            'pinCode' => '1550D0332H2902',
-            'checkCode' => 'eef416eec27026d62d0aa519bda9f91e142c8a6d',
+            'account' => '63167185726653',
+            'checkCode' => '23b685ff8857b5d1c9e7e29bc81d19db09c328a3',
         ]);
 
         $request = new AcceptNotificationRequest($this->getHttpClient(), $httpRequest);
@@ -73,18 +73,18 @@ class AcceptNotificationRequestTest extends TestCase
         self::assertEquals('OK', $request->getReply());
     }
 
-    public function testSendATMData()
+    public function testSendCVSData()
     {
         $httpRequest = $this->getHttpRequest();
         $httpRequest->request->replace([
             'merchantId' => '1604000006',
-            'type' => '4',
+            'type' => '3',
             'amount' => '1500',
             'orderNo' => 'YP2016111503353',
             'transactionNo' => 'C0216111500000000001',
             'statusCode' => '00',
-            'account' => '63167185726653',
-            'checkCode' => '23b685ff8857b5d1c9e7e29bc81d19db09c328a3',
+            'pinCode' => '1550D0332H2902',
+            'checkCode' => 'eef416eec27026d62d0aa519bda9f91e142c8a6d',
         ]);
 
         $request = new AcceptNotificationRequest($this->getHttpClient(), $httpRequest);
