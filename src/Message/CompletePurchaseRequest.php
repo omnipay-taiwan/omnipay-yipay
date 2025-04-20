@@ -2,7 +2,7 @@
 
 namespace Omnipay\YiPay\Message;
 
-use Omnipay\Common\Exception\InvalidResponseException;
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\YiPay\Traits\HasYiPay;
 
 class CompletePurchaseRequest extends PurchaseRequest
@@ -10,7 +10,7 @@ class CompletePurchaseRequest extends PurchaseRequest
     use HasYiPay;
 
     /**
-     * @throws InvalidResponseException
+     * @throws InvalidRequestException
      */
     public function getData()
     {
@@ -21,11 +21,10 @@ class CompletePurchaseRequest extends PurchaseRequest
         if (array_key_exists('transactionNo', $data)) {
             $checkCode = $this->checkCode($this->getSignedKeys((int) $data['type']), $data);
 
-            if (! hash_equals($checkCode, $data['checkCode'])) {
-                throw new InvalidResponseException('Invalid check code');
+            if (! hash_equals($checkCode, $data['checkCode'] ?: '')) {
+                throw new InvalidRequestException('Incorrect checkCode');
             }
         }
-
 
         return $data;
     }
