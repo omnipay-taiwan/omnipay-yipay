@@ -32,7 +32,9 @@ class PurchaseRequest extends AbstractRequest
         ];
 
         if (in_array($type, [3, 4], true)) {
-            $data['expirationDay'] = $this->getExpirationDay() ?: '2';
+            // 根據文檔：超商(type=3) 預設 2 天，ATM(type=4) 預設 7 天
+            $defaultDay = $type === 3 ? '2' : '7';
+            $data['expirationDay'] = $this->getExpirationDay() ?: $defaultDay;
         }
 
         return array_filter(array_merge($data, $this->getUrls($data)), static function ($value) {
