@@ -43,6 +43,42 @@ class CompletePurchaseRequestTest extends TestCase
         self::assertEquals('C0216111500000000001', $response->getTransactionReference());
     }
 
+    public function testSendCreditCardDataWithFailure()
+    {
+        $httpRequest = $this->getHttpRequest();
+        $httpRequest->request->replace([
+            'merchantId' => '1604000006',
+            'type' => '2',
+            'amount' => '1500',
+            'orderNo' => 'YP2016111503353',
+            'transactionNo' => 'C0216111500000000001',
+            'statusCode' => '05',
+            'statusMessage' => '交易拒絕',
+            'approvalCode' => null,
+            'last4CardNumber' => '2222',
+            'checkCode' => 'd861e547ec81b62cc9b1f0c6bbe23f1bc95ad23a',
+        ]);
+
+        $request = new CompletePurchaseRequest($this->getHttpClient(), $httpRequest);
+        $request->initialize([
+            'merchantId' => '1604000006',
+            'key' => 'zBaw7bzzD8K1THSGoIbev08xEJp5yzyeuv1MWJDR2L0',
+            'iv' => 'YeQInQjfelvkBcWuyhWDAw==',
+            'testMode' => true,
+        ]);
+        $request->setReturnUrl('https://gateway-test.yipay.com.tw/demo/return');
+        $request->setCancelUrl('https://gateway-test.yipay.com.tw/demo/cancel');
+        $request->setNotifyUrl('https://gateway-test.yipay.com.tw/demo/notify');
+
+        $response = $request->send();
+
+        self::assertFalse($response->isSuccessful());
+        self::assertEquals('05', $response->getCode());
+        self::assertEquals('交易拒絕', $response->getMessage());
+        self::assertEquals('YP2016111503353', $response->getTransactionId());
+        self::assertEquals('C0216111500000000001', $response->getTransactionReference());
+    }
+
     public function testSendCVSData()
     {
         $httpRequest = $this->getHttpRequest();

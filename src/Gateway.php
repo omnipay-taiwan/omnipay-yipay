@@ -25,9 +25,9 @@ class Gateway extends AbstractGateway
     public function getDefaultParameters()
     {
         return [
-            'merchantId' => '',
-            'key' => '',
-            'iv' => '',
+            'merchantId' => '1604000006',
+            'key' => 'zBaw7bzzD8K1THSGoIbev08xEJp5yzyeuv1MWJDR2L0=',
+            'iv' => 'YeQInQjfelvkBcWuyhWDAw==',
             'testMode' => false,
         ];
     }
